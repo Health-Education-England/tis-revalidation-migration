@@ -9,9 +9,6 @@ to the new Reval system.
     - Set up Sentry project.
     - Provide `SENTRY_DSN` and `SENTRY_ENVIRONMENT` as environmental variables
    during deployment.
- - Sonar:
-    - Add repository to SonarCloud.
-    - Add SonarCloud API key to repository secrets.
 
 ## Workflow
 The `CI/CD Workflow` is triggered on push to any branch.
