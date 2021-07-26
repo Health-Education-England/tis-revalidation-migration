@@ -5,3 +5,17 @@ server:
 sentry:
   dsn: ${SENTRY_DSN:}
   environment: ${SENTRY_ENVIRONMENT:}
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_USERNAME:root}:${MONGODB_PASSWORD:password}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:test_revalidation}?authSource=admin&authMechanism=SCRAM-SHA-1
+  batch:
+    job:
+      enabled: false
+database:
+  driver: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://${TIS_DBHOST:localhost}:${TIS_DBPORT:3306}/${TIS_DBNAME:tcs}?useUnicode=${TIS_UNICODE:true}&characterEncoding=${TIS_ENCODING:utf8}&useSSL=${TIS_SSL:false}
+  username: ${TIS_DBUSER:root}
+  password: ${TIS_DBPASSWORD:}
+
