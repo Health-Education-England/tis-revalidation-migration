@@ -4,7 +4,7 @@ server:
 
 sentry:
   dsn: ${SENTRY_DSN:}
-  environment: ${SENTRY_ENVIRONMENT:}
+  environment: ${SENTRY_ENVIRONMENT:test}
 
 spring:
   data:
@@ -13,9 +13,10 @@ spring:
   batch:
     job:
       enabled: false
-database:
-  driver: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://${TIS_DBHOST:localhost}:${TIS_DBPORT:3306}/${TIS_DBNAME:tcs}?useUnicode=${TIS_UNICODE:true}&characterEncoding=${TIS_ENCODING:utf8}&useSSL=${TIS_SSL:false}
-  username: ${TIS_DBUSER:root}
-  password: ${TIS_DBPASSWORD:}
+  datasource:
+    jdbc-url: jdbc:mysql://${TIS_DBHOST:localhost}:${TIS_DBPORT:3306}/${TIS_DBNAME:tcs}?useUnicode=${TIS_UNICODE:true}&characterEncoding=${TIS_ENCODING:utf8}&useSSL=${TIS_SSL:false}
+    username: ${TIS_DBUSER:root}
+    password: ${TIS_DBPASSWORD:}
+    driverClassName: com.mysql.jdbc.Driver
+
 
