@@ -21,13 +21,51 @@
 
 package uk.nhs.hee.tis.revalidation.migration;
 
+import java.util.Properties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import uk.nhs.hee.tis.revalidation.migration.config.TisDbConfig;
 
 @SpringBootApplication
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class RevalidationMigrationApplication {
+
+  @Autowired
+  private TisDbConfig tisDbConfig;
 
   public static void main(String[] args) {
     SpringApplication.run(RevalidationMigrationApplication.class);
+  }
+
+/*  @Bean
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+
+    LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
+    lef.setPackagesToScan("uk.nhs.hee.tis.revalidation.migration");
+    lef.setDataSource(tisDbConfig.tisDataSource());
+    lef.setJpaVendorAdapter(jpaVendorAdapter());
+    lef.setJpaProperties(new Properties());
+    return lef;
+  }*/
+
+  @Bean
+  public JpaVendorAdapter jpaVendorAdapter() {
+    HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+    jpaVendorAdapter.setDatabase(Database.MYSQL);
+    jpaVendorAdapter.setGenerateDdl(true);
+    jpaVendorAdapter.setShowSql(false);
+
+    jpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQL8Dialect");
+    return jpaVendorAdapter;
   }
 }

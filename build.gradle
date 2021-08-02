@@ -1,6 +1,6 @@
 plugins {
   id "java"
-  id "org.springframework.boot" version "2.5.1"
+  id "org.springframework.boot" version "2.5.2"
   id "io.spring.dependency-management" version "1.0.11.RELEASE"
 
   // Code quality plugins
@@ -21,6 +21,13 @@ configurations {
 
 repositories {
   mavenCentral()
+  maven {
+    url "https://hee-430723991443.d.codeartifact.eu-west-1.amazonaws.com/maven/Health-Education-England/"
+    credentials {
+      username "aws"
+      password System.env.CODEARTIFACT_AUTH_TOKEN
+    }
+  }
 }
 
 dependencies {
@@ -44,6 +51,20 @@ dependencies {
   ext.sentryVersion = "4.3.0"
   implementation "io.sentry:sentry-spring-boot-starter:$sentryVersion"
   implementation "io.sentry:sentry-logback:$sentryVersion"
+
+  // Spring boot batch
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: '2.5.2'
+
+  // MySQL Connector
+  implementation group: "mysql", name: "mysql-connector-java", version: "8.0.26"
+
+  // Spring Data JPA
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.5.2'
+
+  // Spring boot mongodb
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.5.2'
+
+  testRuntimeOnly 'com.h2database:h2'
 }
 
 checkstyle {
