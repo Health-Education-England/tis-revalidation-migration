@@ -89,7 +89,7 @@ public class BatchDataReader {
 
   private Map<String, Order> sortByCreationDate() {
     Map<String, Order> stringOrderMap = new LinkedHashMap<>();
-    stringOrderMap.put("dateAdded", Order.ASCENDING);
+    stringOrderMap.put("id", Order.ASCENDING);
     return stringOrderMap;
   }
 }

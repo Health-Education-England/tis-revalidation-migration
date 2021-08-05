@@ -21,6 +21,11 @@
 
 package uk.nhs.hee.tis.revalidation.migration.processor;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
@@ -41,10 +46,31 @@ public class BatchDataProcessor implements ItemProcessor<Revalidation, Recommend
   @Override
   public Recommendation process(Revalidation revalidation) {
     Recommendation recommendation = new Recommendation();
-    //ToDo mapping needs to be done here
-    recommendation.setProposedOutcomeCode(revalidation.getProposedOutcomeCode());
-    log.info("Processing data "+revalidation.getId()+" Record no "+count.incrementAndGet());
+
+    recommendation.setGmcNumber(revalidation.getTisId()); //to be updated to gmcNumber by joining tcs.gmcDetails table with TisId
+    recommendation.setOutcome(revalidation.getGmcOutcomeCode()); // to be mapped to `RecommendationGmcOutcome` enum
+    recommendation.setRecommendationType(revalidation.getProposedOutcomeCode()); // to be mapped to `RecommendationType` enum
+    recommendation.setRecommendationStatus(revalidation.getRevalidationStatusCode()); // to be mapped to `RecommendationStatus` enum
+    recommendation.setGmcSubmissionDate(mapGmcSubmissionDate(revalidation.getGmcSubmissionDateTime()));
+    recommendation.setActualSubmissionDate(revalidation.getSubmissionDate());
+    recommendation.setGmcRevalidationId(revalidation.getGmcRecommendationId());
+    recommendation.setDeferralDate(revalidation.getDeferralDate());
+    recommendation.setDeferralReason(revalidation.getDeferralReason()); // to be mapped with deferralReason code (some option can't be matched, to be discussed)
+    recommendation.setDeferralSubReason(null); // to be mapped with deferralReason code
+    recommendation.setComments(mapComments(revalidation.getDeferralComment()));
+    recommendation.setAdmin(revalidation.getAdmin());
+
+    log.info("Processing data " + revalidation.getId() + " Record no " + count.incrementAndGet());
     return recommendation;
+  }
+
+  private LocalDate mapGmcSubmissionDate(Date gmcSubmissionDate) {
+    return (gmcSubmissionDate != null)
+       ? LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(gmcSubmissionDate)) : null;
+  }
+
+  private List<String> mapComments(String comment) {
+    return (comment != null) ? Arrays.asList(comment) : null;
   }
 
 }
