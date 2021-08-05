@@ -13,10 +13,10 @@ spring:
   batch:
     job:
       enabled: false
-  datasource:
+
+datasource:
+  tis:
     jdbc-url: jdbc:mysql://${TIS_DBHOST:localhost}:${TIS_DBPORT:3306}/${TIS_DBNAME:tcs}?useUnicode=${TIS_UNICODE:true}&characterEncoding=${TIS_ENCODING:utf8}&useSSL=${TIS_SSL:false}
     username: ${TIS_DBUSER:root}
     password: ${TIS_DBPASSWORD:}
-    driverClassName: com.mysql.jdbc.Driver
-
-
+    driver-class-name: com.mysql.jdbc.Driver
