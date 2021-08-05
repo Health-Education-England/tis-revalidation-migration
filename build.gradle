@@ -33,6 +33,9 @@ repositories {
 dependencies {
   // Spring Boot starters
   implementation "org.springframework.boot:spring-boot-starter-actuator"
+  implementation "org.springframework.boot:spring-boot-starter-batch"
+  implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+  implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
   implementation "org.springframework.boot:spring-boot-starter-web"
   testImplementation("org.springframework.boot:spring-boot-starter-test") {
     exclude group: "org.junit.vintage", module: "junit-vintage-engine"
@@ -52,19 +55,8 @@ dependencies {
   implementation "io.sentry:sentry-spring-boot-starter:$sentryVersion"
   implementation "io.sentry:sentry-logback:$sentryVersion"
 
-  // Spring boot batch
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: '2.5.2'
-
-  // MySQL Connector
-  implementation group: "mysql", name: "mysql-connector-java", version: "8.0.26"
-
-  // Spring Data JPA
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.5.2'
-
-  // Spring boot mongodb
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.5.2'
-
-  testRuntimeOnly 'com.h2database:h2'
+  implementation "mysql:mysql-connector-java"
+  testRuntimeOnly "com.h2database:h2"
 }
 
 checkstyle {

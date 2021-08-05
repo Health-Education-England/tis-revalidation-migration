@@ -28,10 +28,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-
 public class TisDbConfig {
 
-  @ConfigurationProperties(prefix = "spring.datasource")
+  @ConfigurationProperties(prefix = "datasource.tis")
   @Bean
   public DataSource tisDataSource() {
     return DataSourceBuilder.create().build();
