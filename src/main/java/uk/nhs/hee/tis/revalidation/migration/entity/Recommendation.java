@@ -21,6 +21,7 @@
 
 package uk.nhs.hee.tis.revalidation.migration.entity;
 
+import java.time.LocalDate;
 import java.util.List;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -29,23 +30,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "recommendation")
 @Data
 public class Recommendation {
+
   @Id
   private String id;
-  private String proposedOutcomeCode;
-  private String deferralDate;
+  private String gmcNumber;
+  private String outcome; // to be changed to `RecommendationGmcOutcome` enum
+  private String recommendationType; // to be changed to `RecommendationType` enum
+  private String recommendationStatus; // to be changed to `RecommendationStatus` enum
+  private LocalDate gmcSubmissionDate;
+  private LocalDate actualSubmissionDate;
+  private String gmcRevalidationId;
+  private LocalDate deferralDate;
   private String deferralReason;
   private String deferralSubReason;
-  private String deferralComment;
-  private String revalidationStatusCode;
-  private String gmcSubmissionDateTime;
-  private String gmcSubmissionReturnCode;
-  private String gmcRecommendationId;
-  private String gmcOutcomeCode;
-  private String gmcStatusCheckDateTime;
-  private String admin;
-  private String submissionDate;
-  private String recommendationSubmitter;
-  private String dateAdded;
   private List<String> comments;
-
+  private String admin;
 }
