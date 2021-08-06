@@ -1,6 +1,6 @@
 plugins {
   id "java"
-  id "org.springframework.boot" version "2.5.1"
+  id "org.springframework.boot" version "2.5.2"
   id "io.spring.dependency-management" version "1.0.11.RELEASE"
 
   // Code quality plugins
@@ -21,11 +21,21 @@ configurations {
 
 repositories {
   mavenCentral()
+  maven {
+    url "https://hee-430723991443.d.codeartifact.eu-west-1.amazonaws.com/maven/Health-Education-England/"
+    credentials {
+      username "aws"
+      password System.env.CODEARTIFACT_AUTH_TOKEN
+    }
+  }
 }
 
 dependencies {
   // Spring Boot starters
   implementation "org.springframework.boot:spring-boot-starter-actuator"
+  implementation "org.springframework.boot:spring-boot-starter-batch"
+  implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+  implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
   implementation "org.springframework.boot:spring-boot-starter-web"
   testImplementation("org.springframework.boot:spring-boot-starter-test") {
     exclude group: "org.junit.vintage", module: "junit-vintage-engine"
@@ -44,6 +54,9 @@ dependencies {
   ext.sentryVersion = "4.3.0"
   implementation "io.sentry:sentry-spring-boot-starter:$sentryVersion"
   implementation "io.sentry:sentry-logback:$sentryVersion"
+
+  implementation "mysql:mysql-connector-java"
+  testRuntimeOnly "com.h2database:h2"
 }
 
 checkstyle {
