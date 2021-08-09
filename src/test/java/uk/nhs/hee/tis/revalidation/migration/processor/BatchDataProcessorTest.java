@@ -67,7 +67,7 @@ class BatchDataProcessorTest {
   private String recommendationSubmitter;
   private LocalDateTime dateAdded;
 
-  private Revalidation revalidationDto;
+  private Revalidation revalidationDto = new Revalidation();
 
 
   /**
@@ -92,25 +92,23 @@ class BatchDataProcessorTest {
     recommendationSubmitter = faker.lorem().characters(20);
     dateAdded = LocalDateTime.now();
 
-    revalidationDto = Revalidation.builder()
-        .id(111)
-        .tisId(tisId)
-        .deferralReason(deferralReason)
-        .deferralComment(deferralComment)
-        .deferralDate(deferralDate)
-        .proposedOutcomeCode(proposedOutcomeCode)
-        .revalidationStatusCode(revalidationStatusCode)
-        .gmcSubmissionDateTime(gmcSubmissionDateTime)
-        .gmcSubmissionReturnCode(gmcSubmissionReturnCode)
-        .gmcOutcomeCode(gmcOutcomeCode)
-        .gmcRecommendationId(gmcRecommendationId)
-        .gmcRecommendationId(gmcRecommendationId)
-        .gmcStatusCheckDateTime(gmcStatusCheckDateTime)
-        .admin(admin)
-        .submissionDate(submissionDate)
-        .recommendationSubmitter(recommendationSubmitter)
-        .dateAdded(dateAdded)
-        .build();
+    revalidationDto.setId(111);
+    revalidationDto.setTisId(tisId);
+    revalidationDto.setDeferralReason(deferralReason);
+    revalidationDto.setDeferralComment(deferralComment);
+    revalidationDto.setDeferralDate(deferralDate);
+    revalidationDto.setProposedOutcomeCode(proposedOutcomeCode);
+    revalidationDto.setRevalidationStatusCode(revalidationStatusCode);
+    revalidationDto.setGmcSubmissionDateTime(gmcSubmissionDateTime);
+    revalidationDto.setGmcSubmissionReturnCode(gmcSubmissionReturnCode);
+    revalidationDto.setGmcOutcomeCode(gmcOutcomeCode);
+    revalidationDto.setGmcRecommendationId(gmcRecommendationId);
+    revalidationDto.setGmcRecommendationId(gmcRecommendationId);
+    revalidationDto.setGmcStatusCheckDateTime(gmcStatusCheckDateTime);
+    revalidationDto.setAdmin(admin);
+    revalidationDto.setSubmissionDate(submissionDate);
+    revalidationDto.setRecommendationSubmitter(recommendationSubmitter);
+    revalidationDto.setDateAdded(dateAdded);
   }
 
   @Test
@@ -132,26 +130,25 @@ class BatchDataProcessorTest {
 
   @Test
   void shouldHandleNull() {
-    Revalidation nullRevalidationDto;
-    nullRevalidationDto = Revalidation.builder()
-        .id(111)
-        .tisId(null)
-        .deferralReason(null)
-        .deferralComment(null)
-        .deferralDate(null)
-        .proposedOutcomeCode(null)
-        .revalidationStatusCode(null)
-        .gmcSubmissionDateTime(null)
-        .gmcSubmissionReturnCode(null)
-        .gmcOutcomeCode(null)
-        .gmcRecommendationId(null)
-        .gmcRecommendationId(null)
-        .gmcStatusCheckDateTime(null)
-        .admin(null)
-        .submissionDate(null)
-        .recommendationSubmitter(null)
-        .dateAdded(null)
-        .build();
+    Revalidation nullRevalidationDto = new Revalidation();
+    nullRevalidationDto.setId(111);
+    nullRevalidationDto.setTisId(null);
+    nullRevalidationDto.setDeferralReason(null);
+    nullRevalidationDto.setDeferralComment(null);
+    nullRevalidationDto.setDeferralDate(null);
+    nullRevalidationDto.setProposedOutcomeCode(null);
+    nullRevalidationDto.setRevalidationStatusCode(null);
+    nullRevalidationDto.setGmcSubmissionDateTime(null);
+    nullRevalidationDto.setGmcSubmissionReturnCode(null);
+    nullRevalidationDto.setGmcOutcomeCode(null);
+    nullRevalidationDto.setGmcRecommendationId(null);
+    nullRevalidationDto.setGmcRecommendationId(null);
+    nullRevalidationDto.setGmcStatusCheckDateTime(null);
+    nullRevalidationDto.setAdmin(null);
+    nullRevalidationDto.setSubmissionDate(null);
+    nullRevalidationDto.setRecommendationSubmitter(null);
+    nullRevalidationDto.setDateAdded(null);
+
     Recommendation result = batchDataProcessor.process(nullRevalidationDto);
 
     assertThat(result.getOutcome(), is(nullValue()));
