@@ -12,7 +12,7 @@ spring:
       uri: mongodb://${MONGODB_USERNAME:root}:${MONGODB_PASSWORD:password}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:test_revalidation}?authSource=admin&authMechanism=SCRAM-SHA-1
   batch:
     job:
-      enabled: false
+      enabled: true
     jdbc:
       initialize-schema: ALWAYS
 

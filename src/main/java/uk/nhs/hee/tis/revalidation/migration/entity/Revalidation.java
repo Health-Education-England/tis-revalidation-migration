@@ -26,10 +26,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import lombok.Builder;
 import lombok.Data;
 
-@Builder
 @Entity
 @Data
 public class Revalidation {
@@ -52,4 +50,6 @@ public class Revalidation {
   private String recommendationSubmitter;
   private LocalDateTime dateAdded;
 
+  public Revalidation() {
+  }
 }
