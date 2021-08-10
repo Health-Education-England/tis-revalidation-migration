@@ -39,6 +39,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.nhs.hee.tis.revalidation.migration.entity.Recommendation;
+import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationGmcOutcome;
+import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationStatus;
+import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationType;
 import uk.nhs.hee.tis.revalidation.migration.entity.Revalidation;
 
 
@@ -80,11 +83,11 @@ class BatchDataProcessorTest {
     deferralReason = faker.lorem().characters(20);
     deferralComment = faker.lorem().characters(20);
     deferralDate = now();
-    proposedOutcomeCode = faker.lorem().characters(20);
-    revalidationStatusCode = faker.lorem().characters(20);
+    proposedOutcomeCode = "non_engagement";
+    revalidationStatusCode = "ready_to_review";
     gmcSubmissionDateTime = faker.date().past(10, TimeUnit.DAYS);
     gmcSubmissionReturnCode = faker.lorem().characters(20);
-    gmcOutcomeCode = faker.lorem().characters(20);
+    gmcOutcomeCode = "Approved";
     gmcRecommendationId = faker.lorem().characters(20);
     gmcStatusCheckDateTime = LocalDateTime.now();
     admin = faker.lorem().characters(20);
@@ -115,9 +118,9 @@ class BatchDataProcessorTest {
   void shouldProcessRevalidationDataToRecommendation() {
     Recommendation result = batchDataProcessor.process(revalidationDto);
 
-    assertThat(result.getOutcome(), is(gmcOutcomeCode));
-    assertThat(result.getRecommendationType(), is(proposedOutcomeCode));
-    assertThat(result.getRecommendationStatus(), is(revalidationStatusCode));
+    assertThat(result.getOutcome(), is(RecommendationGmcOutcome.APPROVED));
+    assertThat(result.getRecommendationType(), is(RecommendationType.NON_ENGAGEMENT));
+    assertThat(result.getRecommendationStatus(), is(RecommendationStatus.READY_TO_REVIEW));
     assertThat(result.getGmcSubmissionDate(), is(
         LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(gmcSubmissionDateTime))));
     assertThat(result.getActualSubmissionDate(), is(submissionDate));

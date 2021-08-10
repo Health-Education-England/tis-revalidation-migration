@@ -31,6 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 import uk.nhs.hee.tis.revalidation.migration.entity.Recommendation;
+import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationGmcOutcome;
+import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationStatus;
+import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationType;
 import uk.nhs.hee.tis.revalidation.migration.entity.Revalidation;
 
 @Component
@@ -48,10 +51,13 @@ public class BatchDataProcessor implements ItemProcessor<Revalidation, Recommend
     Recommendation recommendation = new Recommendation();
 
     recommendation.setGmcNumber(revalidation.getTisId()); //to be updated to gmcNumber by joining tcs.gmcDetails table with TisId
-    recommendation.setOutcome(revalidation.getGmcOutcomeCode()); // to be mapped to `RecommendationGmcOutcome` enum
-    recommendation.setRecommendationType(revalidation.getProposedOutcomeCode()); // to be mapped to `RecommendationType` enum
-    recommendation.setRecommendationStatus(revalidation.getRevalidationStatusCode()); // to be mapped to `RecommendationStatus` enum
-    recommendation.setGmcSubmissionDate(mapGmcSubmissionDate(revalidation.getGmcSubmissionDateTime()));
+    recommendation.setOutcome(mapOutcome(revalidation.getGmcOutcomeCode()));
+    recommendation.setRecommendationType(
+        mapRecommendationType(revalidation.getProposedOutcomeCode()));
+    recommendation.setRecommendationStatus(
+        mapRecommendationStatus(revalidation.getRevalidationStatusCode()));
+    recommendation.setGmcSubmissionDate(
+        mapGmcSubmissionDate(revalidation.getGmcSubmissionDateTime()));
     recommendation.setActualSubmissionDate(revalidation.getSubmissionDate());
     recommendation.setGmcRevalidationId(revalidation.getGmcRecommendationId());
     recommendation.setDeferralDate(revalidation.getDeferralDate());
@@ -62,6 +68,18 @@ public class BatchDataProcessor implements ItemProcessor<Revalidation, Recommend
 
     log.info("Processing data " + revalidation.getId() + " Record no " + count.incrementAndGet());
     return recommendation;
+  }
+
+  private RecommendationGmcOutcome mapOutcome(String outcome) {
+    return RecommendationGmcOutcome.fromString(outcome);
+  }
+
+  private RecommendationType mapRecommendationType(String recommendationType) {
+    return RecommendationType.fromString(recommendationType);
+  }
+
+  private RecommendationStatus mapRecommendationStatus(String recommendationStatus) {
+    return RecommendationStatus.fromString(recommendationStatus);
   }
 
   private LocalDate mapGmcSubmissionDate(Date gmcSubmissionDate) {
