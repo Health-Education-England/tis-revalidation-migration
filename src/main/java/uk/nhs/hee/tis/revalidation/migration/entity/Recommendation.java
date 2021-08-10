@@ -34,9 +34,9 @@ public class Recommendation {
   @Id
   private String id;
   private String gmcNumber;
-  private String outcome; // to be changed to `RecommendationGmcOutcome` enum
-  private String recommendationType; // to be changed to `RecommendationType` enum
-  private String recommendationStatus; // to be changed to `RecommendationStatus` enum
+  private RecommendationGmcOutcome outcome;
+  private RecommendationType recommendationType;
+  private RecommendationStatus recommendationStatus;
   private LocalDate gmcSubmissionDate;
   private LocalDate actualSubmissionDate;
   private String gmcRevalidationId;
