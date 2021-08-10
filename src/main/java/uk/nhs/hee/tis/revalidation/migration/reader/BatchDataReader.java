@@ -82,14 +82,14 @@ public class BatchDataReader {
   private PagingQueryProvider createQuery() {
     MySqlPagingQueryProvider queryProvider = new MySqlPagingQueryProvider();
     queryProvider.setSelectClause("SELECT * ");
-    queryProvider.setFromClause("FROM Revalidation");
+    queryProvider.setFromClause("FROM revalidation.Revalidation reval INNER JOIN tcs.GmcDetails gmc ON reval.tisId = gmc.id");
     queryProvider.setSortKeys(sortByCreationDate());
     return queryProvider;
   }
 
   private Map<String, Order> sortByCreationDate() {
     Map<String, Order> stringOrderMap = new LinkedHashMap<>();
-    stringOrderMap.put("id", Order.ASCENDING);
+    stringOrderMap.put("reval.id", Order.ASCENDING);
     return stringOrderMap;
   }
 }

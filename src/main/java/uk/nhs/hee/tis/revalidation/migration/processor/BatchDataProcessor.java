@@ -50,7 +50,7 @@ public class BatchDataProcessor implements ItemProcessor<Revalidation, Recommend
   public Recommendation process(Revalidation revalidation) {
     Recommendation recommendation = new Recommendation();
 
-    recommendation.setGmcNumber(revalidation.getTisId()); //to be updated to gmcNumber by joining tcs.gmcDetails table with TisId
+    recommendation.setGmcNumber(revalidation.getGmcNumber());
     recommendation.setOutcome(mapOutcome(revalidation.getGmcOutcomeCode()));
     recommendation.setRecommendationType(
         mapRecommendationType(revalidation.getProposedOutcomeCode()));

@@ -49,6 +49,7 @@ public class Revalidation {
   private LocalDate submissionDate;
   private String recommendationSubmitter;
   private LocalDateTime dateAdded;
+  private String gmcNumber;
 
   public Revalidation() {
   }
