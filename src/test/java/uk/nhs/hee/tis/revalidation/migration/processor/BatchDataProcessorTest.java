@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.nhs.hee.tis.revalidation.migration.entity.DeferralReason;
 import uk.nhs.hee.tis.revalidation.migration.entity.Recommendation;
 import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationGmcOutcome;
 import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationStatus;
@@ -80,7 +81,7 @@ class BatchDataProcessorTest {
   public void setup() {
 
     tisId = faker.lorem().characters(8);
-    deferralReason = faker.lorem().characters(20);
+    deferralReason = "EXAM_FAILURE";
     deferralComment = faker.lorem().characters(20);
     deferralDate = now();
     proposedOutcomeCode = "non_engagement";
@@ -126,7 +127,7 @@ class BatchDataProcessorTest {
     assertThat(result.getActualSubmissionDate(), is(submissionDate));
     assertThat(result.getGmcRevalidationId(), is(gmcRecommendationId));
     assertThat(result.getDeferralDate(), is(deferralDate));
-    assertThat(result.getDeferralReason(), is(deferralReason));
+    assertThat(result.getDeferralReason(), is(DeferralReason.EXAM_FAILURE.getCode()));
     assertThat(result.getComments(), is(Arrays.asList(deferralComment)));
     assertThat(result.getAdmin(), is(admin));
   }

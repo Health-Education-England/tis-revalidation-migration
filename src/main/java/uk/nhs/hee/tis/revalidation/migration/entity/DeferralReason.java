@@ -21,29 +21,46 @@
 
 package uk.nhs.hee.tis.revalidation.migration.entity;
 
-public enum RecommendationType {
+public enum DeferralReason {
 
-  REVALIDATE("1", "Revalidate"), DEFER("2", "Defer"), NON_ENGAGEMENT("3", "Non_Engagement");
+  INSUFFICIENT_EVIDENCE("1", "Insufficient evidence for a positive recommendation", "INSUFFICIENT_EVIDENCE"),
+  ONGOING_PROCESS("2", "The doctor is subject to an ongoing process", "ONGOING_PROCESS"),
+  BELOW_1_YEAR_TO_CCT("3", "Below 1 year to CCT", "BELOW_1_YEAR_TO_CCT"),
+  SICK_CARERS_LEAVE("4", "Sick carers leave", "SICK_CARERS_LEAVE"),
+  PARENTAL_LEAVE("5", "Parental leave", "PARENTAL_LEAVE"),
+  EXAM_FAILURE("6", "Exam failure", "EXAM_FAILURE"),
+  OTHER("7", "Other", "OTHER"),
+  OUT_OF_CLINICAL_TRAINING("8", "Out of Clinical training", "OUT_OF_CLINICAL_TRAINING"),
+  BELOW_5_YEARS_FULL_REG("9", "Below 5 years full reg", "BELOW_5_YEARS_FULL_REG");
 
   final String code;
-  final String type;
+  final String reason;
+  final String abbr;
 
-  RecommendationType(final String code, final String type) {
+  DeferralReason(final String code, final String reason, final String abbr) {
     this.code = code;
-    this.type = type;
+    this.reason = reason;
+    this.abbr = abbr;
   }
 
   /**
-   * Map recommendation type string value to RecommendationType.
+   * Map deferral reason string value to code.
    */
-  public static RecommendationType fromString(final String value) {
+  public static String fromString(final String value) {
     if (value != null) {
-      for (final RecommendationType recommendationType : RecommendationType.values()) {
-        if (recommendationType.type.equalsIgnoreCase(value)) {
-          return recommendationType;
+      for (final DeferralReason deferralReason : DeferralReason.values()) {
+        if (deferralReason.abbr.equalsIgnoreCase(value)) {
+          return deferralReason.code;
         }
       }
     }
     return null;
+  }
+
+  /**
+   * Map deferral reason to code.
+   */
+  public String getCode() {
+    return this.code;
   }
 }

@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
+import uk.nhs.hee.tis.revalidation.migration.entity.DeferralReason;
 import uk.nhs.hee.tis.revalidation.migration.entity.Recommendation;
 import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationGmcOutcome;
 import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationStatus;
@@ -61,8 +62,8 @@ public class BatchDataProcessor implements ItemProcessor<Revalidation, Recommend
     recommendation.setActualSubmissionDate(revalidation.getSubmissionDate());
     recommendation.setGmcRevalidationId(revalidation.getGmcRecommendationId());
     recommendation.setDeferralDate(revalidation.getDeferralDate());
-    recommendation.setDeferralReason(revalidation.getDeferralReason()); // to be mapped with deferralReason code (some option can't be matched, to be discussed)
-    recommendation.setDeferralSubReason(null); // to be mapped with deferralReason code
+    recommendation.setDeferralReason(mapDeferralReason(revalidation.getDeferralReason()));
+    recommendation.setDeferralSubReason(null);
     recommendation.setComments(mapComments(revalidation.getDeferralComment()));
     recommendation.setAdmin(revalidation.getAdmin());
 
@@ -85,6 +86,10 @@ public class BatchDataProcessor implements ItemProcessor<Revalidation, Recommend
   private LocalDate mapGmcSubmissionDate(Date gmcSubmissionDate) {
     return (gmcSubmissionDate != null)
        ? LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(gmcSubmissionDate)) : null;
+  }
+
+  private String mapDeferralReason(String reason) {
+    return DeferralReason.fromString(reason);
   }
 
   private List<String> mapComments(String comment) {
