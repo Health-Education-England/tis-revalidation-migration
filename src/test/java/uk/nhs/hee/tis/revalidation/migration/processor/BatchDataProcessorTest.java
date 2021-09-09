@@ -25,6 +25,7 @@ import static java.time.LocalDate.now;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.verify;
 
 import com.github.javafaker.Faker;
 import java.text.SimpleDateFormat;
@@ -37,6 +38,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.nhs.hee.tis.revalidation.migration.entity.DeferralReason;
 import uk.nhs.hee.tis.revalidation.migration.entity.Recommendation;
@@ -44,6 +46,7 @@ import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationGmcOutcome;
 import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationStatus;
 import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationType;
 import uk.nhs.hee.tis.revalidation.migration.entity.Revalidation;
+import uk.nhs.hee.tis.revalidation.migration.util.GmcHexStringConverter;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +56,9 @@ class BatchDataProcessorTest {
 
   @InjectMocks
   BatchDataProcessor batchDataProcessor;
+
+  @Mock
+  GmcHexStringConverter gmcHexStringConverter;
 
   private Integer id;
   private String tisId;
@@ -70,6 +76,7 @@ class BatchDataProcessorTest {
   private LocalDate submissionDate;
   private String recommendationSubmitter;
   private LocalDateTime dateAdded;
+  private String gmcNumber;
 
   private Revalidation revalidationDto = new Revalidation();
 
@@ -95,6 +102,7 @@ class BatchDataProcessorTest {
     submissionDate = now();
     recommendationSubmitter = faker.lorem().characters(20);
     dateAdded = LocalDateTime.now();
+    gmcNumber = "1234567";
 
     revalidationDto.setId(111);
     revalidationDto.setTisId(tisId);
@@ -113,6 +121,7 @@ class BatchDataProcessorTest {
     revalidationDto.setSubmissionDate(submissionDate);
     revalidationDto.setRecommendationSubmitter(recommendationSubmitter);
     revalidationDto.setDateAdded(dateAdded);
+    revalidationDto.setGmcNumber(gmcNumber);
   }
 
   @Test
@@ -165,5 +174,11 @@ class BatchDataProcessorTest {
     assertThat(result.getDeferralReason(), is(nullValue()));
     assertThat(result.getComments(), is(nullValue()));
     assertThat(result.getAdmin(), is(nullValue()));
+  }
+
+  @Test
+  void shouldCheckForHexGmcNumbers() {
+    Recommendation result = batchDataProcessor.process(revalidationDto);
+    verify(gmcHexStringConverter).convertGmcString(gmcNumber);
   }
 }

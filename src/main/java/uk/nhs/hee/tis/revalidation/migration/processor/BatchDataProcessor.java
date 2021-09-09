@@ -36,6 +36,7 @@ import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationGmcOutcome;
 import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationStatus;
 import uk.nhs.hee.tis.revalidation.migration.entity.RecommendationType;
 import uk.nhs.hee.tis.revalidation.migration.entity.Revalidation;
+import uk.nhs.hee.tis.revalidation.migration.util.GmcHexStringConverter;
 
 @Component
 @Slf4j
@@ -43,15 +44,18 @@ public class BatchDataProcessor implements ItemProcessor<Revalidation, Recommend
 
   private AtomicInteger count = new AtomicInteger();
 
-  public BatchDataProcessor() {
+  private GmcHexStringConverter gmcHexStringConverter;
 
+  public BatchDataProcessor(GmcHexStringConverter gmcHexStringConverter) {
+    this.gmcHexStringConverter = gmcHexStringConverter;
   }
 
   @Override
   public Recommendation process(Revalidation revalidation) {
     Recommendation recommendation = new Recommendation();
-
-    recommendation.setGmcNumber(revalidation.getGmcNumber());
+    recommendation.setGmcNumber(
+        gmcHexStringConverter.convertGmcString(revalidation.getGmcNumber())
+      );
     recommendation.setOutcome(mapOutcome(revalidation.getGmcOutcomeCode()));
     recommendation.setRecommendationType(
         mapRecommendationType(revalidation.getProposedOutcomeCode()));
