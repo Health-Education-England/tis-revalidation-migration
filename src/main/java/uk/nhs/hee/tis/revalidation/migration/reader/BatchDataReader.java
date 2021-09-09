@@ -83,7 +83,7 @@ public class BatchDataReader {
     MySqlPagingQueryProvider queryProvider = new MySqlPagingQueryProvider();
     queryProvider.setSelectClause("SELECT * ");
     queryProvider.setFromClause("FROM revalidation.Revalidation reval "
-        + "INNER JOIN profile.TraineeProfile gmc ON reval.tisId = gmc.tisId");
+        + "INNER JOIN auth.TraineeProfile gmc ON reval.tisId = gmc.tisId");
     queryProvider.setSortKeys(sortByCreationDate());
     return queryProvider;
   }
