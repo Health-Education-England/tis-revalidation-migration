@@ -55,7 +55,7 @@ public class BatchDataProcessor implements ItemProcessor<Revalidation, Recommend
     Recommendation recommendation = new Recommendation();
     recommendation.setGmcNumber(
         gmcHexStringConverter.convertGmcString(revalidation.getGmcNumber())
-      );
+    );
     recommendation.setOutcome(mapOutcome(revalidation.getGmcOutcomeCode()));
     recommendation.setRecommendationType(
         mapRecommendationType(revalidation.getProposedOutcomeCode()));
