@@ -33,6 +33,6 @@ import lombok.NoArgsConstructor;
 public class Snapshot implements Serializable {
 
   @Id
-  private Integer revalidationId;
+  private String revalidationId;
   private String data;
 }

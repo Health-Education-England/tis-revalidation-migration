@@ -19,31 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package uk.nhs.hee.tis.revalidation.migration.processor;
+package uk.nhs.hee.tis.revalidation.migration.entity;
 
-import com.google.gson.Gson;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.stereotype.Component;
-import uk.nhs.hee.tis.revalidation.migration.entity.Snapshot;
-import uk.nhs.hee.tis.revalidation.migration.entity.TargetSnapshot;
 
-@Component
-@Slf4j
 @Data
-@NoArgsConstructor
-public class SnapshotDataProcessor implements ItemProcessor<Snapshot, TargetSnapshot> {
+public class TraineeProfile {
 
-  @Override
-  public TargetSnapshot process(Snapshot snapshot) {
-    TargetSnapshot targetSnapshot = new TargetSnapshot();
-    Gson gson = new Gson();
-    targetSnapshot = gson.fromJson(snapshot.getData(), TargetSnapshot.class);
-    targetSnapshot.setGmcNumber(targetSnapshot.getTraineeProfile().getGmcId());
-    targetSnapshot.setLegacyRevalidationId(targetSnapshot.getRevalidation().getId());
-    targetSnapshot.setLegacyTisId(targetSnapshot.getRevalidation().getTisId());
-    return targetSnapshot;
-  }
+  private String id;
+  private String tisId;
+  private String forename;
+  private String surname;
+  private String gmcId;
+  private String designatedBodyCode;
+  private String managingDeanery;
+  private String programme;
+  private String proposedOutcomeCode;
+  private String deferralReason;
+  private String revalidationStatusCode;
+  private String gmcSubmissionDateTime;
+  private String gmcSubmissionReturnCode;
+  private String gmcOutcomeCode;
+  private String cctDate;
+  private String lastArcpDate;
+  private String underNotice;
+  private String latestNoteDate;
+  private String programmeStartDate;
+  private String submissionDate;
+  private String traineeAdmin;
+  private String dateAdded;
+  private String recommendationSubmitter;
+  private Integer timeInProgramme;
 }

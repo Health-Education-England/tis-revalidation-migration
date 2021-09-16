@@ -34,6 +34,7 @@ import lombok.NoArgsConstructor;
 public class SnapshotRevalidation {
 
   private String id;
+  private String tisId;
   private String proposedOutcomeCode;
   private String deferralDate;
   private String deferralReason;
