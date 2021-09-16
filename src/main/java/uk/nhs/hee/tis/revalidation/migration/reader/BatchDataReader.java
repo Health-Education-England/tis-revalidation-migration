@@ -42,6 +42,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import uk.nhs.hee.tis.revalidation.migration.entity.Recommendation;
 import uk.nhs.hee.tis.revalidation.migration.entity.Revalidation;
+import uk.nhs.hee.tis.revalidation.migration.entity.Snapshot;
+import uk.nhs.hee.tis.revalidation.migration.entity.TargetSnapshot;
 
 @Configuration
 @EnableBatchProcessing
@@ -51,20 +53,31 @@ public class BatchDataReader {
   public Job job(JobBuilderFactory jobBuilderFactory,
       StepBuilderFactory stepBuilderFactory,
       ItemReader<Revalidation> itemReader,
+      ItemReader<Snapshot> snapshotItemReader,
       ItemProcessor<Revalidation, Recommendation> itemProcessor,
-      ItemWriter<Recommendation> itemWriter
+      ItemProcessor<Snapshot, TargetSnapshot> snapshotItemProcessor,
+      ItemWriter<Recommendation> itemWriter,
+      ItemWriter<TargetSnapshot> snapshotItemWriter
   ) {
 
-    Step step = stepBuilderFactory.get("ETL-file-load")
+    Step recommendationMigrationStep = stepBuilderFactory.get("Recommendation-data-load")
         .<Revalidation, Recommendation>chunk(100)
         .reader(itemReader)
         .processor(itemProcessor)
         .writer(itemWriter)
         .build();
 
-    return jobBuilderFactory.get("ETL-Load")
+    Step snapshotMigrationStep = stepBuilderFactory.get("Snapshot-data-load")
+        .<Snapshot, TargetSnapshot>chunk(100)
+        .reader(snapshotItemReader)
+        .processor(snapshotItemProcessor)
+        .writer(snapshotItemWriter)
+        .build();
+
+    return jobBuilderFactory.get("Revalidation-migration-Load")
         .incrementer(new RunIdIncrementer())
-        .start(step)
+        .start(recommendationMigrationStep)
+        .next(snapshotMigrationStep)
         .build();
   }
 
@@ -73,24 +86,37 @@ public class BatchDataReader {
     JdbcPagingItemReader<Revalidation> jdbcPagingItemReader = new JdbcPagingItemReader<>();
     jdbcPagingItemReader.setDataSource(dataSource);
     jdbcPagingItemReader.setPageSize(21000);
-    PagingQueryProvider queryProvider = createQuery();
+    PagingQueryProvider queryProvider = createQuery(
+        "FROM revalidation.Revalidation reval "
+            + "INNER JOIN auth.TraineeProfile gmc ON reval.tisId = gmc.tisId", "reval.id");
     jdbcPagingItemReader.setQueryProvider(queryProvider);
     jdbcPagingItemReader.setRowMapper(new BeanPropertyRowMapper<>(Revalidation.class));
     return jdbcPagingItemReader;
   }
 
-  private PagingQueryProvider createQuery() {
+  @Bean
+  public ItemReader<Snapshot> itemReader1(DataSource dataSource) {
+    JdbcPagingItemReader<Snapshot> jdbcPagingItemReader = new JdbcPagingItemReader<>();
+    jdbcPagingItemReader.setDataSource(dataSource);
+    jdbcPagingItemReader.setPageSize(21000);
+    PagingQueryProvider queryProvider = createQuery("FROM revalidation.Snapshot",
+        "Snapshot.revalidationId");
+    jdbcPagingItemReader.setQueryProvider(queryProvider);
+    jdbcPagingItemReader.setRowMapper(new BeanPropertyRowMapper<>(Snapshot.class));
+    return jdbcPagingItemReader;
+  }
+
+  private PagingQueryProvider createQuery(String clause, String sortKeys) {
     MySqlPagingQueryProvider queryProvider = new MySqlPagingQueryProvider();
     queryProvider.setSelectClause("SELECT * ");
-    queryProvider.setFromClause("FROM revalidation.Revalidation reval "
-        + "INNER JOIN auth.TraineeProfile gmc ON reval.tisId = gmc.tisId");
-    queryProvider.setSortKeys(sortByCreationDate());
+    queryProvider.setFromClause(clause);
+    queryProvider.setSortKeys(sortByKey(sortKeys));
     return queryProvider;
   }
 
-  private Map<String, Order> sortByCreationDate() {
+  private Map<String, Order> sortByKey(String sortKeys) {
     Map<String, Order> stringOrderMap = new LinkedHashMap<>();
-    stringOrderMap.put("reval.id", Order.ASCENDING);
+    stringOrderMap.put(sortKeys, Order.ASCENDING);
     return stringOrderMap;
   }
 }
