@@ -38,9 +38,8 @@ public class SnapshotDataProcessor implements ItemProcessor<Snapshot, TargetSnap
 
   @Override
   public TargetSnapshot process(Snapshot snapshot) {
-    TargetSnapshot targetSnapshot = new TargetSnapshot();
     Gson gson = new Gson();
-    targetSnapshot = gson.fromJson(snapshot.getData(), TargetSnapshot.class);
+    TargetSnapshot targetSnapshot = gson.fromJson(snapshot.getData(), TargetSnapshot.class);
     targetSnapshot.setGmcNumber(targetSnapshot.getTraineeProfile().getGmcId());
     targetSnapshot.setLegacyRevalidationId(targetSnapshot.getRevalidation().getId());
     targetSnapshot.setLegacyTisId(targetSnapshot.getRevalidation().getTisId());

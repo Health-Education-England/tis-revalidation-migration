@@ -21,7 +21,6 @@
 
 package uk.nhs.hee.tis.revalidation.migration.entity;
 
-import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
