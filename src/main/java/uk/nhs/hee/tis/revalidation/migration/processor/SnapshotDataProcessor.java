@@ -21,6 +21,7 @@
 
 package uk.nhs.hee.tis.revalidation.migration.processor;
 
+import com.google.gson.Gson;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,11 @@ public class SnapshotDataProcessor implements ItemProcessor<Snapshot, TargetSnap
 
   @Override
   public TargetSnapshot process(Snapshot snapshot) {
-    TargetSnapshot targetSnapshot = new TargetSnapshot();
+    Gson gson = new Gson();
+    TargetSnapshot targetSnapshot = gson.fromJson(snapshot.getData(), TargetSnapshot.class);
+    targetSnapshot.setGmcNumber(targetSnapshot.getTraineeProfile().getGmcId());
+    targetSnapshot.setLegacyRevalidationId(targetSnapshot.getRevalidation().getId());
+    targetSnapshot.setLegacyTisId(targetSnapshot.getRevalidation().getTisId());
     return targetSnapshot;
   }
 }

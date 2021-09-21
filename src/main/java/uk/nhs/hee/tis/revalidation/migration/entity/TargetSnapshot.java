@@ -21,20 +21,29 @@
 
 package uk.nhs.hee.tis.revalidation.migration.entity;
 
-import java.io.Serializable;
+import java.util.List;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Snapshot")
+@Document(collection = "snapshot")
 @Data
-public class TargetSnapshot implements Serializable {
+public class TargetSnapshot {
+
   @Id
   private String id;
-  private String concerns;
+  private String gmcNumber;
   private String legacyRevalidationId;
   private String legacyTisId;
-  private String gmcNumber;
   private SnapshotRevalidation revalidation;
-
+  private ContactDetails contactDetails;
+  private TraineeProfile traineeProfile;
+  private Submitter submitter;
+  private Ro ro;
+  private Arcps arcps;
+  private SelfDeclaration selfDeclarations;
+  private Placement placements;
+  private TraineeCard traineeCard;
+  private List<Note> notes;
+  private Concern concerns;
 }

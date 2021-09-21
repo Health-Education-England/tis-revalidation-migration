@@ -22,33 +22,12 @@
 package uk.nhs.hee.tis.revalidation.migration.entity;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class SnapshotRevalidation {
+public class Placement {
 
-  private String id;
   private String tisId;
-  private String proposedOutcomeCode;
-  private String deferralDate;
-  private String deferralReason;
-  private String deferralSubReason;
-  private String deferralComment;
-  private String revalidationStatusCode;
-  private String gmcSubmissionDateTime;
-  private String gmcSubmissionReturnCode;
-  private String gmcRecommendationId;
-  private String gmcOutcomeCode;
-  private String gmcStatusCheckDateTime;
-  private String admin;
-  private String submissionDate;
-  private String recommendationSubmitter;
-  private String dateAdded;
-  private List<String> comments;
+  private List<PlacementDetails> placements;
+
 }
