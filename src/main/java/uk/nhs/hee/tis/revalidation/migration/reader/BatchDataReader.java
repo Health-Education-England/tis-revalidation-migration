@@ -43,7 +43,9 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import uk.nhs.hee.tis.revalidation.migration.entity.Recommendation;
 import uk.nhs.hee.tis.revalidation.migration.entity.Revalidation;
 import uk.nhs.hee.tis.revalidation.migration.entity.Snapshot;
+import uk.nhs.hee.tis.revalidation.migration.entity.TargetNotes;
 import uk.nhs.hee.tis.revalidation.migration.entity.TargetSnapshot;
+import uk.nhs.hee.tis.revalidation.migration.entity.TraineeNote;
 
 @Configuration
 @EnableBatchProcessing
@@ -54,10 +56,13 @@ public class BatchDataReader {
       StepBuilderFactory stepBuilderFactory,
       ItemReader<Revalidation> itemReader,
       ItemReader<Snapshot> snapshotItemReader,
+      ItemReader<TraineeNote> noteItemReader,
       ItemProcessor<Revalidation, Recommendation> itemProcessor,
       ItemProcessor<Snapshot, TargetSnapshot> snapshotItemProcessor,
+      ItemProcessor<TraineeNote, TargetNotes> noteItemProcessor,
       ItemWriter<Recommendation> itemWriter,
-      ItemWriter<TargetSnapshot> snapshotItemWriter
+      ItemWriter<TargetSnapshot> snapshotItemWriter,
+      ItemWriter<TargetNotes> noteItemWriter
   ) {
 
     Step recommendationMigrationStep = stepBuilderFactory.get("Recommendation-data-load")
@@ -74,10 +79,18 @@ public class BatchDataReader {
         .writer(snapshotItemWriter)
         .build();
 
+    Step noteMigrationStep = stepBuilderFactory.get("Note-data-load")
+        .<TraineeNote, TargetNotes>chunk(100)
+        .reader(noteItemReader)
+        .processor(noteItemProcessor)
+        .writer(noteItemWriter)
+        .build();
+
     return jobBuilderFactory.get("Revalidation-migration-Load")
         .incrementer(new RunIdIncrementer())
         .start(recommendationMigrationStep)
         .next(snapshotMigrationStep)
+        .next(noteMigrationStep)
         .build();
   }
 
@@ -103,6 +116,24 @@ public class BatchDataReader {
         "Snapshot.revalidationId");
     jdbcPagingItemReader.setQueryProvider(queryProvider);
     jdbcPagingItemReader.setRowMapper(new BeanPropertyRowMapper<>(Snapshot.class));
+    return jdbcPagingItemReader;
+  }
+
+  /**
+   * Item Reader for reading Trainee Notes data from Revalidation.
+   *
+   * @param dataSource data of trainee notes
+   * @return JdbcPagingItemReader for trainee ntoes data
+   */
+  @Bean
+  public ItemReader<TraineeNote> itemReaderNotes(DataSource dataSource) {
+    JdbcPagingItemReader<TraineeNote> jdbcPagingItemReader = new JdbcPagingItemReader<>();
+    jdbcPagingItemReader.setDataSource(dataSource);
+    jdbcPagingItemReader.setPageSize(21000);
+    PagingQueryProvider queryProvider = createQuery("FROM revalidation.TraineeNote reval "
+        + "INNER JOIN auth.TraineeProfile gmc ON reval.tisId = gmc.tisId", "reval.id");
+    jdbcPagingItemReader.setQueryProvider(queryProvider);
+    jdbcPagingItemReader.setRowMapper(new BeanPropertyRowMapper<>(TraineeNote.class));
     return jdbcPagingItemReader;
   }
 
