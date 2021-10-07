@@ -22,6 +22,7 @@
 package uk.nhs.hee.tis.revalidation.migration.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import lombok.Data;
@@ -34,7 +35,7 @@ public class TraineeNote {
   private String id;
   private String tisId;
   private String text;
-  private LocalDate createdDate;
-  private LocalDate updatedDate;
+  private LocalDateTime createdDate;
+  private LocalDateTime updatedDate;
   private String gmcNumber;
 }

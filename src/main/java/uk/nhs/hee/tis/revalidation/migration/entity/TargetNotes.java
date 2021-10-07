@@ -22,6 +22,7 @@
 package uk.nhs.hee.tis.revalidation.migration.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -34,6 +35,6 @@ public class TargetNotes {
   private String id;
   private String gmcId;
   private String text;
-  private LocalDate createdDate;
-  private LocalDate updatedDate;
+  private LocalDateTime createdDate;
+  private LocalDateTime updatedDate;
 }

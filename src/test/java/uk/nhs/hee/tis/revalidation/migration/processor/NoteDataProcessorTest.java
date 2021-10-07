@@ -27,6 +27,7 @@ import static org.hamcrest.core.Is.is;
 
 import com.github.javafaker.Faker;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,8 +48,8 @@ class NoteDataProcessorTest {
   private Integer id;
   private String tisId;
   private String text;
-  private LocalDate createdDate;
-  private LocalDate updatedDate;
+  private LocalDateTime createdDate;
+  private LocalDateTime updatedDate;
   private String gmcNumber;
 
   private TraineeNote traineeNote = new TraineeNote();
@@ -62,8 +63,8 @@ class NoteDataProcessorTest {
 
     tisId = faker.lorem().characters(8);
     text = faker.lorem().characters(100);
-    createdDate = now();
-    updatedDate = now();
+    createdDate = LocalDateTime.now();
+    updatedDate = LocalDateTime.now();
     gmcNumber = faker.lorem().characters(8);
 
     traineeNote.setTisId(tisId);
