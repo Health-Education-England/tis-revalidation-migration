@@ -59,7 +59,7 @@ dependencies {
   implementation "com.github.javafaker:javafaker:1.0.2"
   testRuntimeOnly "com.h2database:h2"
 
-  implementation "com.google.code.gson:gson:2.8.5"
+  implementation "com.google.code.gson:gson:2.8.8"
 }
 
 checkstyle {
