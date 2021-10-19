@@ -101,7 +101,8 @@ public class BatchDataReader {
     jdbcPagingItemReader.setPageSize(21000);
     PagingQueryProvider queryProvider = createQuery(
         "FROM revalidation.Revalidation reval "
-            + "INNER JOIN auth.TraineeProfile gmc ON reval.tisId = gmc.tisId", "reval.id");
+            + "INNER JOIN auth.TraineeProfile gmc ON reval.tisId = gmc.tisId "
+            , "revalidationStatusCode != \"not_started\" ", "reval.id");
     jdbcPagingItemReader.setQueryProvider(queryProvider);
     jdbcPagingItemReader.setRowMapper(new BeanPropertyRowMapper<>(Revalidation.class));
     return jdbcPagingItemReader;
@@ -123,7 +124,7 @@ public class BatchDataReader {
    * Item Reader for reading Trainee Notes data from Revalidation.
    *
    * @param dataSource data of trainee notes
-   * @return JdbcPagingItemReader for trainee ntoes data
+   * @return JdbcPagingItemReader for trainee notes data
    */
   @Bean
   public ItemReader<TraineeNote> itemReaderNotes(DataSource dataSource) {
@@ -141,6 +142,15 @@ public class BatchDataReader {
     MySqlPagingQueryProvider queryProvider = new MySqlPagingQueryProvider();
     queryProvider.setSelectClause("SELECT * ");
     queryProvider.setFromClause(clause);
+    queryProvider.setSortKeys(sortByKey(sortKeys));
+    return queryProvider;
+  }
+
+  private PagingQueryProvider createQuery(String clause, String whereClause, String sortKeys) {
+    MySqlPagingQueryProvider queryProvider = new MySqlPagingQueryProvider();
+    queryProvider.setSelectClause("SELECT * ");
+    queryProvider.setFromClause(clause);
+    queryProvider.setWhereClause(whereClause);
     queryProvider.setSortKeys(sortByKey(sortKeys));
     return queryProvider;
   }
