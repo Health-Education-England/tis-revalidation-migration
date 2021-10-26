@@ -6,7 +6,7 @@ to the new Reval system.
 
 The migration ETL is written in Spring Batch in tis-revalidation-migration service. 
 
-It consists of an ItemRreader to read data from the legacy Reval MySQL database, an
+It consists of an ItemReader to read data from the legacy Reval MySQL database, an
 ItemProcessor to map the trainee data into the format we need in the new Reval, and an
 ItemWriter to insert the data into new Reval MongoDB.
 
