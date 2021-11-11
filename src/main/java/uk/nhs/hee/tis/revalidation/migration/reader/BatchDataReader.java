@@ -64,20 +64,22 @@ public class BatchDataReader {
       ItemWriter<TargetSnapshot> snapshotItemWriter,
       ItemWriter<TargetNotes> noteItemWriter
   ) {
-
-    Step recommendationMigrationStep = stepBuilderFactory.get("Recommendation-data-load")
-        .<Revalidation, Recommendation>chunk(100)
-        .reader(itemReader)
-        .processor(itemProcessor)
-        .writer(itemWriter)
-        .build();
-
-    Step snapshotMigrationStep = stepBuilderFactory.get("Snapshot-data-load")
-        .<Snapshot, TargetSnapshot>chunk(100)
-        .reader(snapshotItemReader)
-        .processor(snapshotItemProcessor)
-        .writer(snapshotItemWriter)
-        .build();
+    // Final migration for `recommendation` and `snapshot` were executed  on Prod,
+    // just hide the code to avoid `recommendation` and `snapshot` being migrated accidentally again
+    //
+    // Step recommendationMigrationStep = stepBuilderFactory.get("Recommendation-data-load")
+    //     .<Revalidation, Recommendation>chunk(100)
+    //     .reader(itemReader)
+    //     .processor(itemProcessor)
+    //     .writer(itemWriter)
+    //     .build();
+    //
+    // Step snapshotMigrationStep = stepBuilderFactory.get("Snapshot-data-load")
+    //     .<Snapshot, TargetSnapshot>chunk(100)
+    //     .reader(snapshotItemReader)
+    //     .processor(snapshotItemProcessor)
+    //     .writer(snapshotItemWriter)
+    //     .build();
 
     Step noteMigrationStep = stepBuilderFactory.get("Note-data-load")
         .<TraineeNote, TargetNotes>chunk(100)
@@ -88,9 +90,9 @@ public class BatchDataReader {
 
     return jobBuilderFactory.get("Revalidation-migration-Load")
         .incrementer(new RunIdIncrementer())
-        .start(recommendationMigrationStep)
-        .next(snapshotMigrationStep)
-        .next(noteMigrationStep)
+        // .start(recommendationMigrationStep)
+        // .next(snapshotMigrationStep)
+        .start(noteMigrationStep)
         .build();
   }
 
@@ -102,7 +104,7 @@ public class BatchDataReader {
     PagingQueryProvider queryProvider = createQuery(
         "FROM revalidation.Revalidation reval "
             + "INNER JOIN auth.TraineeProfile gmc ON reval.tisId = gmc.tisId "
-            , "revalidationStatusCode != \"not_started\" ", "reval.id");
+        , "revalidationStatusCode != \"not_started\" ", "reval.id");
     jdbcPagingItemReader.setQueryProvider(queryProvider);
     jdbcPagingItemReader.setRowMapper(new BeanPropertyRowMapper<>(Revalidation.class));
     return jdbcPagingItemReader;
